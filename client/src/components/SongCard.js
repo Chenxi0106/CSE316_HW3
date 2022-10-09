@@ -35,6 +35,13 @@ function SongCard(props) {
 
         }
     }
+    
+    const handleClick= function(event){
+        if(event.detail===2){
+            const id= event.target.id.split("-")[1];
+            store.showEditPlayListModal(id);
+        }
+    }
 
         
 
@@ -54,6 +61,7 @@ function SongCard(props) {
             onDragLeave={handleDragLeave}
             onDrop={handleDrop}
             draggable="true"
+            onClick={handleClick}
         >
             {index + 1}.
             <a

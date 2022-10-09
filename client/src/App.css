@@ -420,3 +420,31 @@ span {
   margin:5px;
   font-size: 20pt;
 }
+
+
+
+
+.input_label{
+  font-size:24pt;
+}
+#input_text_box{
+  grid-template-columns: 40% 60%;
+  grid-template-rows: 33% 33% 34%;
+}
+#input_label_1{
+  grid-row: 1/2;
+  grid-column:1/2;
+}
+#input_label_2{
+  grid-row: 2/3;
+  grid-column:1/2;
+}
+#input_label_3{
+  grid-row: 3/4;
+  grid-column:1/2;
+}
+.input_box{
+  margin-right:20px;
+  margin-bottom:10px;
+}
+

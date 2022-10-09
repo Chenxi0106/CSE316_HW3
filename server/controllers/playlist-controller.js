@@ -128,13 +128,13 @@ moveTwoSong = (req,res) => {
             return res.status(400).json({ success: false, error: err })
         }
         let sourceSong=list.songs[body.sourceId];
-        console.log("my pointed list is "+sourceSong);
+        //console.log("my pointed list is "+sourceSong);
         let targetSong=list.songs[body.targetId];
-        console.log("my pointed list is "+targetSong);
+        //console.log("my pointed list is "+targetSong);
         list.songs.splice(body.sourceId,1,targetSong);
-        console.log("left now list is "+list.songs);
+        //console.log("left now list is "+list.songs);
         list.songs.splice(body.targetId,1,sourceSong);
-        console.log("right now list is "+list.songs);
+        //console.log("right now list is "+list.songs);
         list.save()
         .then(() => {
             return res.status(201).json({
@@ -151,6 +151,34 @@ moveTwoSong = (req,res) => {
     console.log("list value are "+list.songs+" and id is "+body.id);
     }).catch(err => console.log(err))
 }
+updateSong=(req,res)=>{
+    const body=req.body;
+    console.log("before goes down, what is index?"+body.index);
+    Playlist.findOne({ _id:body.id }, (err, list) => {
+        if (err) {
+            return res.status(400).json({ success: false, error: err })
+        }
+        //let message={id:store.currentList._id,index:store.editSongIndex,object:{title:{t},artist:{a},youTubeId:{y}}};
+        list.songs[body.index].title=body.title;
+        list.songs[body.index].artist=body.artist;
+        list.songs[body.index].youTubeId=body.youTubeId;
+        list.save()
+        .then(() => {
+            return res.status(201).json({
+                success: true,
+                list: list
+            })
+        })
+        .catch(error => {
+            return res.status(400).json({
+                error,
+                message: 'Playlist Not Update Backend!',
+            })
+        })
+    }).catch(err => console.log(err))
+
+
+}
 
 
 
@@ -163,5 +191,6 @@ module.exports = {
     getPlaylistById,
     deletePlaylist,
     createNewSong,
-    moveTwoSong
+    moveTwoSong,
+    updateSong
 }
