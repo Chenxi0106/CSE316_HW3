@@ -99,6 +99,31 @@ deletePlaylist= async(req,res)=>{
     }).catch(err=>console.log(err))
 }
 
+createNewSong= (req,res)=>{
+    const body=req.body;
+    //const sendMessage={id:currentList._id,song:{ title:"Untitled",artist:"Untitled",youTubeId:"dQw4w9WgXcQ"}};
+    Playlist.findOne({ _id:body.id }, (err, list) => {
+        if (err) {
+            return res.status(400).json({ success: false, error: err })
+        }
+        list.songs.push(body.song);
+        list.save()
+        .then(() => {
+            return res.status(201).json({
+                success: true,
+                list: list
+            })
+        })
+        .catch(error => {
+            return res.status(400).json({
+                error,
+                message: 'Playlist Not Created!',
+            })
+        })
+        console.log("list value are "+list.songs+" and id is "+body.id);
+    }).catch(err => console.log(err))
+}
+
 
 
 module.exports = {
@@ -106,5 +131,6 @@ module.exports = {
     getPlaylists,
     getPlaylistPairs,
     getPlaylistById,
-    deletePlaylist
+    deletePlaylist,
+    createNewSong
 }

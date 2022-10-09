@@ -19,7 +19,8 @@ export const GlobalStoreActionType = {
     SET_CURRENT_LIST: "SET_CURRENT_LIST",
     SET_LIST_NAME_EDIT_ACTIVE: "SET_LIST_NAME_EDIT_ACTIVE",
     EDIT_SELECTED_LIST:"EDIT_SELECTED_LIST",
-    DELETE_SELECTED_LIST:"DELETE_SELECTED_LIST"
+    DELETE_SELECTED_LIST:"DELETE_SELECTED_LIST",
+ 
 }
 
 // WE'LL NEED THIS TO PROCESS TRANSACTIONS
@@ -98,7 +99,9 @@ export const useGlobalStore = () => {
                     idNamePairs: store.idNamePairs,
                     currentList: payload,
                     newListCounter: store.newListCounter,
-                    listNameActive: false
+                    listNameActive: false,
+                    editListId:null,
+                    editListName:null
                 });
             }
             // START EDITING A LIST NAME
@@ -265,6 +268,29 @@ export const useGlobalStore = () => {
         store.loadIdNamePairs();
       
     }
+    
+    store.addNewSong = function(){
+        async function asyncAddNewSong(){
+            const sendMessage={id:store.currentList._id,song:{ title:"Untitled",artist:"Untitled",youTubeId:"dQw4w9WgXcQ"}};
+            const response=await api.createNewSong(sendMessage);
+            if(response.data.success){
+                storeReducer({
+                    type:GlobalStoreActionType.SET_CURRENT_LIST,
+                    payload:response.data.list
+                });
+            }
+            else{
+                console.log("SERVER FAIL TO ADD THE LIST");
+            }
+
+        }
+        asyncAddNewSong();
+    }
+
+
+
+
+
     
 /*
     store.getListName=function(id){
