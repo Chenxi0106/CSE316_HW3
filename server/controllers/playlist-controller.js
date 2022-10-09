@@ -101,7 +101,6 @@ deletePlaylist= async(req,res)=>{
 
 createNewSong= (req,res)=>{
     const body=req.body;
-    //const sendMessage={id:currentList._id,song:{ title:"Untitled",artist:"Untitled",youTubeId:"dQw4w9WgXcQ"}};
     Playlist.findOne({ _id:body.id }, (err, list) => {
         if (err) {
             return res.status(400).json({ success: false, error: err })
@@ -120,9 +119,40 @@ createNewSong= (req,res)=>{
                 message: 'Playlist Not Created!',
             })
         })
-        console.log("list value are "+list.songs+" and id is "+body.id);
     }).catch(err => console.log(err))
 }
+moveTwoSong = (req,res) => {
+    const body=req.body;
+    Playlist.findOne({ _id:body.id }, (err, list) => {
+        if (err) {
+            return res.status(400).json({ success: false, error: err })
+        }
+        let sourceSong=list.songs[body.sourceId];
+        console.log("my pointed list is "+sourceSong);
+        let targetSong=list.songs[body.targetId];
+        console.log("my pointed list is "+targetSong);
+        list.songs.splice(body.sourceId,1,targetSong);
+        console.log("left now list is "+list.songs);
+        list.songs.splice(body.targetId,1,sourceSong);
+        console.log("right now list is "+list.songs);
+        list.save()
+        .then(() => {
+            return res.status(201).json({
+                success: true,
+                list: list
+            })
+        })
+        .catch(error => {
+            return res.status(400).json({
+                error,
+                message: 'Playlist Not Moved at backend!',
+            })
+        })
+    console.log("list value are "+list.songs+" and id is "+body.id);
+    }).catch(err => console.log(err))
+}
+
+
 
 
 
@@ -132,5 +162,6 @@ module.exports = {
     getPlaylistPairs,
     getPlaylistById,
     deletePlaylist,
-    createNewSong
+    createNewSong,
+    moveTwoSong
 }

@@ -287,6 +287,22 @@ export const useGlobalStore = () => {
         asyncAddNewSong();
     }
 
+    store.moveTwoSong = function(sourceId,targetId){
+        async function asyncMoveTwoSong(){
+            let message={id:store.currentList._id,sourceId:sourceId,targetId:targetId};
+            const response=await api.moveTwoSong(message);
+            if(response.data.success){
+                storeReducer({
+                    type:GlobalStoreActionType.SET_CURRENT_LIST,
+                    payload:response.data.list
+                });
+            }
+            else{
+                console.log("List is not moved");
+            }
+        }
+        asyncMoveTwoSong();
+    } 
 
 
 

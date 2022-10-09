@@ -16,6 +16,7 @@ router.get('/playlistpairs', PlaylistController.getPlaylistPairs)
 //own code
 router.delete('/playlist/:id',PlaylistController.deletePlaylist)
 router.post('/playlistSongs',PlaylistController.createNewSong)
+router.put('/playlistTwoSongs',PlaylistController.moveTwoSong)
 
 
 
