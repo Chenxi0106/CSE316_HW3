@@ -3,7 +3,7 @@ import { GlobalStoreContext } from '../store'
 
 function SongCard(props) {
     const { store } = useContext(GlobalStoreContext);
-
+    const { song, index } = props;
 
     //own code
     const handleDragStart = (event) => {
@@ -43,12 +43,12 @@ function SongCard(props) {
         }
     }
 
+    const showDeleteSongModal=function(){
+        store.showDeleteSongModal(index);
+    }
+
         
 
-
-
-
-    const { song, index } = props;
     let cardClass = "list-card unselected-list-card";
     return (
         <div
@@ -74,6 +74,7 @@ function SongCard(props) {
                 type="button"
                 id={"remove-song-" + index}
                 className="list-card-button"
+                onClick={showDeleteSongModal}
                 value={"\u2715"}
             />
         </div>

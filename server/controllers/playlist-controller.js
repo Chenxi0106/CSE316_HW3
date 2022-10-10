@@ -153,6 +153,7 @@ moveTwoSong = (req,res) => {
 }
 updateSong=(req,res)=>{
     const body=req.body;
+    console.log(body);
     console.log("before goes down, what is index?"+body.index);
     Playlist.findOne({ _id:body.id }, (err, list) => {
         if (err) {
@@ -179,6 +180,31 @@ updateSong=(req,res)=>{
 
 
 }
+deleteSong= async(req,res)=>{
+    console.log(req);
+    const body=req.body;
+    console.log("at the beginning, the id is "+body.id+" and index is "+body.index );
+    Playlist.findOne({_id:body.id},(err,list)=> {
+        if(err){
+            return res.status(400).json({success:false, err:err})
+        }
+        list.songs.splice(body.index,1);
+        list.save()
+        .then(() => {
+            return res.status(201).json({
+                success: true,
+                list: list
+            })
+        })
+        .catch(error => {
+            return res.status(400).json({
+                error,
+                message: 'Playlist Not Update Backend!',
+            })
+        })
+
+    }).catch(err => console.log(err))
+}
 
 
 
@@ -192,5 +218,6 @@ module.exports = {
     deletePlaylist,
     createNewSong,
     moveTwoSong,
-    updateSong
+    updateSong,
+    deleteSong
 }
