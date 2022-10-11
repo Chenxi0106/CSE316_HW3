@@ -1,7 +1,12 @@
 import { createContext, useState } from 'react'
 import jsTPS from '../common/jsTPS'
 import api from '../api'
+import { AddSong_Transaction } from '../common/AddSong_Transaction';
+import { DeleteSong_Transaction } from '../common/DeleteSong_Transaction';
+import { MoveSong_Transaction } from '../common/MoveSong_Transaction';
+import { EditSong_Transaction } from '../common/EditSong_Transaction';
 export const GlobalStoreContext = createContext({});
+
 /*
     This is our global data store. Note that it uses the Flux design pattern,
     which makes use of things like actions and reducers. 
@@ -189,10 +194,10 @@ export const useGlobalStore = () => {
         async function asyncChangeListName(id) {
             let response = await api.getPlaylistById(id);
             if (response.data.success) {
-                let playlist = response.data.playist;
+                let playlist = response.data.playlist;
                 playlist.name = newName;
                 async function updateList(playlist) {
-                    response = await api.updatePlaylistById(playlist._id, playlist);
+                    response = await api.updatePlaylistById({id:playlist._id, list:playlist});
                     if (response.data.success) {
                         async function getListPairs(playlist) {
                             response = await api.getPlaylistPairs();
@@ -244,6 +249,8 @@ export const useGlobalStore = () => {
 
 
 
+
+
     //own code
     store.createNewList= function(){
         async function asyncreateNewList() {
@@ -272,6 +279,8 @@ export const useGlobalStore = () => {
                     }
         }
                 asyncreateNewList();
+                store.setCurrentList(store.idNamePairs[store.idNamePairs.length-1]._id);
+
     }
     
     store.showDeletedListModal=function(idNamePair){
@@ -304,10 +313,17 @@ export const useGlobalStore = () => {
         store.loadIdNamePairs();
       
     }
-    
-    store.addNewSong = function(){
+
+    store.CreateTransaction_AddSong= function(){
+        let t=new AddSong_Transaction(store,store.currentList.songs.length,{title:"Untitled",artist:"Untitled",youTubeId:"dQw4w9WgXcQ"});
+        tps.addTransaction(t);
+    }
+
+
+    //insert at current place
+    store.addNewSong = function(i,s){
         async function asyncAddNewSong(){
-            const sendMessage={id:store.currentList._id,song:{ title:"Untitled",artist:"Untitled",youTubeId:"dQw4w9WgXcQ"}};
+            const sendMessage={id:store.currentList._id,index:i,song:s};
             const response=await api.createNewSong(sendMessage);
             if(response.data.success){
                 storeReducer({
@@ -322,6 +338,12 @@ export const useGlobalStore = () => {
         }
         asyncAddNewSong();
     }
+
+    store.CreateTransaction_MoveSong=function (sourceId,targetId){
+        let t=new MoveSong_Transaction(store,sourceId,targetId);
+        tps.addTransaction(t);
+    }
+
 
     store.moveTwoSong = function(sourceId,targetId){
         async function asyncMoveTwoSong(){
@@ -351,13 +373,17 @@ export const useGlobalStore = () => {
         document.getElementById("playlist_card_edit_box").classList.add("is-visible");
     }
 
-    store.confirmEditSong=function(){
-        document.getElementById("playlist_card_edit_box").classList.remove("is-visible");
+    store.CreateTransaction_EditSong=function(t,a,y){
+        let oldSong=store.currentList.songs[store.editSongIndex];
+        let newSong={title:t,artist:a,youTubeId:y};
+        let transaction=new EditSong_Transaction(store,store.editSongIndex,oldSong,newSong);
+        tps.addTransaction(transaction);
+
+    }
+    
+    store.confirmEditSong=function(i,t,a,y){
         async function asyncUpdateSong(){
-            let t=document.getElementById("title_input").value;
-            let a=document.getElementById("artist_input").value;
-            let y=document.getElementById("youtubeid_input").value;
-            let message={id:store.currentList._id,index:store.editSongIndex,title:t,artist:a,youTubeId:y};
+            let message={id:store.currentList._id,index:i,title:t,artist:a,youTubeId:y};
             console.log(message);
             const response= await api.updateSong(message);
             if(response.data.success){
@@ -374,8 +400,8 @@ export const useGlobalStore = () => {
         }
         asyncUpdateSong();
     }
+
     store.cancelEditSong = function(){
-        document.getElementById("playlist_card_edit_box").classList.remove("is-visible");
         storeReducer({
             type:GlobalStoreActionType.SET_CURRENT_LIST,
             payload:store.currentList
@@ -385,14 +411,21 @@ export const useGlobalStore = () => {
 
     store.showDeleteSongModal=function(id){
         document.getElementById("delete-songList-modal").classList.add("is-visible");
+        store.setDeleteSongIndex(id);
+    }
+    store.setDeleteSongIndex=function(id){
         storeReducer({
             type:GlobalStoreActionType.PREPARE_TO_DELETE_THE_SONG,
             payload:id
         });
+    }
+    store.CreateTransaction_DeleteSong=function(){
+        let t=new DeleteSong_Transaction(store,store.deleteSongIndex,store.currentList.songs[store.deleteSongIndex]);
+        tps.addTransaction(t);
 
+        
     }
     store.deleteSongList=function(){
-        document.getElementById("delete-songList-modal").classList.remove("is-visible");
         async function asyncDeleteSongList(){
             let message={id:store.currentList._id,index:store.deleteSongIndex};
             //let message={id:store.currentList._id,index:store.deleteSongIndex};
@@ -411,12 +444,14 @@ export const useGlobalStore = () => {
         asyncDeleteSongList();
     }
     store.cancelDeleteSongList=function(){
-        document.getElementById("delete-songList-modal").classList.remove("is-visible");
         storeReducer({
             type:GlobalStoreActionType.SET_CURRENT_LIST,
             payload:store.currentList
         });
     }
+
+
+ 
 
 
 

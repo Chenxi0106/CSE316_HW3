@@ -5,11 +5,11 @@ import { useHistory } from 'react-router-dom'
 export default function DeleteSongModal() {
     const { store } = useContext(GlobalStoreContext);
     const history = useHistory();
-    let name = store.deleteSongIndex==null?"":store.currentList.songs[store.deleteSongIndex].title;
+    let name = store.currentList==null||store.deleteSongIndex==null||store.deleteSongIndex>=store.currentList.songs.length?"":store.currentList.songs[store.deleteSongIndex].title;
 
     function deleteList(event){
         document.getElementById("delete-songList-modal").classList.remove("is-visible");
-        store.deleteSongList();
+        store.CreateTransaction_DeleteSong();
     }
     function cancelDeleteList(event){
         document.getElementById("delete-songList-modal").classList.remove("is-visible");

@@ -31,7 +31,7 @@ function SongCard(props) {
             let sourceId = event.dataTransfer.getData("id");
     
             // ASK THE MODEL TO MOVE THE DATA
-            store.moveTwoSong(sourceId,targetId);
+            store.CreateTransaction_MoveSong(sourceId,targetId);
 
         }
     }

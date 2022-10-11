@@ -13,9 +13,14 @@ function EditePlayListModal() {
     
 
     const confirmModal=()=>{
-        store.confirmEditSong();
+        document.getElementById("playlist_card_edit_box").classList.remove("is-visible");
+        let t=document.getElementById("title_input").value;
+        let a=document.getElementById("artist_input").value;
+        let y=document.getElementById("youtubeid_input").value;
+        store.CreateTransaction_EditSong(t,a,y);
     }
     const cancelModal=()=>{
+        document.getElementById("playlist_card_edit_box").classList.remove("is-visible");
         store.cancelEditSong();
 
     }

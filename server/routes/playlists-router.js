@@ -20,6 +20,10 @@ router.put('/playlistTwoSongs',PlaylistController.moveTwoSong)
 router.put('/playlistSong',PlaylistController.updateSong)
 router.put('/playlistDeleteSong',PlaylistController.deleteSong)
 
+//own code
+router.put('/playlistUpdate',PlaylistController.updatePlaylistById)
+
+
 
 
 

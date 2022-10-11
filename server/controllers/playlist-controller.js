@@ -105,7 +105,7 @@ createNewSong= (req,res)=>{
         if (err) {
             return res.status(400).json({ success: false, error: err })
         }
-        list.songs.push(body.song);
+        list.songs.splice(body.index,0,body.song);
         list.save()
         .then(() => {
             return res.status(201).json({
@@ -207,6 +207,32 @@ deleteSong= async(req,res)=>{
 }
 
 
+//own code
+updatePlaylistById=(req,res)=>{
+    console.log(req.body);
+    Playlist.findOne({_id:req.body.id},(err,list)=>{
+        if(err){
+            return res.status(400).json({success:false, err:err})
+        }
+        list.name=req.body.list.name;
+        console.log(list);
+        list.save()
+        .then(() => {
+            return res.status(201).json({
+                success: true,
+                list: list
+            })
+        })
+        .catch(error => {
+            return res.status(400).json({
+                error,
+                message: 'Playlist Not Update Backend!',
+            })
+        })
+
+    }).catch(err => console.log(err))
+}
+
 
 
 
@@ -219,5 +245,6 @@ module.exports = {
     createNewSong,
     moveTwoSong,
     updateSong,
-    deleteSong
+    deleteSong,
+    updatePlaylistById
 }
