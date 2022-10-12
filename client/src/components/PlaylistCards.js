@@ -15,7 +15,7 @@ function PlaylistCards() {
     return (
         <div id="playlist-cards">
         {
-            store.currentList.songs.map((song, index) => (
+            store.currentList!=null&store.currentList.songs!=null&&store.currentList.songs.map((song, index) => (
                 <SongCard
                     id={'playlist-song-' + (index)}
                     key={'playlist-song-' + (index)}
