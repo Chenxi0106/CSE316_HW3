@@ -1,5 +1,4 @@
-import { useContext } from 'react'
-import { GlobalStoreContext } from '../store'
+
 import jsTPS from './jsTPS';
 
 
@@ -16,8 +15,7 @@ export class AddSong_Transaction extends jsTPS {
         
     
         undoTransaction() {
-            this.store.setDeleteSongIndex(this.index);
-            this.store.deleteSongList();
+            this.store.deleteSongList(this.index);
         }
 
  

@@ -189,6 +189,7 @@ deleteSong= async(req,res)=>{
             return res.status(400).json({success:false, err:err})
         }
         list.songs.splice(body.index,1);
+        console.log("right noew, list songs are"+ list.songs)
         list.save()
         .then(() => {
             return res.status(201).json({

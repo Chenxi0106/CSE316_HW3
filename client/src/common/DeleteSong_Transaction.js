@@ -11,7 +11,7 @@ export class DeleteSong_Transaction extends jsTPS {
         this.song=s;
         }
         doTransaction(){
-            this.store.deleteSongList();
+            this.store.deleteSongList(this.index);
         }
         
     
