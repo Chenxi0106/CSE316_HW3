@@ -81,7 +81,8 @@ export const useGlobalStore = () => {
                     idNamePairs: store.idNamePairs,
                     currentList: payload,
                     newListCounter: store.newListCounter + 1,
-                    listNameActive: false
+                    listNameActive: false,
+                    isListNameEditActive: true,
                 })
             }
             // GET ALL THE LISTS SO WE CAN PRESENT THEM
@@ -284,13 +285,14 @@ export const useGlobalStore = () => {
                             type: GlobalStoreActionType.LOAD_ID_NAME_PAIRS,
                             payload: pairsArray
                         });
+                        store.setCurrentList(store.idNamePairs[store.idNamePairs.length-1]._id);
                     }
                     else {
                         console.log("API FAILED TO GET THE LIST PAIRS");
                     }
         }
                 asyncreateNewList();
-                store.setCurrentList(store.idNamePairs[store.idNamePairs.length-1]._id);
+                
 
     }
     
@@ -317,6 +319,7 @@ export const useGlobalStore = () => {
                 console.log("API FAILED TO DELETE LIST");
             }
         }
+        document.getElementById("delete-list-modal").classList.remove("is-visible");
         asyncdeleteSelectedList();
         
     }
