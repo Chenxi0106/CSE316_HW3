@@ -274,10 +274,6 @@ export const useGlobalStore = () => {
                             type: GlobalStoreActionType.CREATE_NEW_LIST,
                             payload: playlist
                         });
-                    }
-                    else {
-                        console.log("API FAILED TO CREATE THE LIST");
-                    }
                     const response1 = await api.getPlaylistPairs();
                     if (response1.data.success) {
                         let pairsArray = response1.data.idNamePairs;
@@ -285,11 +281,16 @@ export const useGlobalStore = () => {
                             type: GlobalStoreActionType.LOAD_ID_NAME_PAIRS,
                             payload: pairsArray
                         });
-                        store.setCurrentList(store.idNamePairs[store.idNamePairs.length-1]._id);
+                        store.setCurrentList(pairsArray[pairsArray.length-1]._id);
                     }
                     else {
                         console.log("API FAILED TO GET THE LIST PAIRS");
                     }
+                    }
+                    else {
+                        console.log("API FAILED TO CREATE THE LIST");
+                    }
+                   
         }
                 asyncreateNewList();
                 
@@ -319,13 +320,11 @@ export const useGlobalStore = () => {
                 console.log("API FAILED TO DELETE LIST");
             }
         }
-        document.getElementById("delete-list-modal").classList.remove("is-visible");
         asyncdeleteSelectedList();
-        
     }
+    
     store.cancelDeleteList = function(){
         store.loadIdNamePairs();
-      
     }
 
     store.CreateTransaction_AddSong= function(){
