@@ -28,7 +28,7 @@ export default function DeleteListModal() {
                     </div>
                     <div class="modal-center">
                         <div class="modal-center-content">
-                            Are you sure you wish to permanently delete the playlist?
+                            Are you sure you wish to permanently delete {name} from playlist?
                         </div>
                     </div>
                     <div class="modal-south">

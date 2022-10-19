@@ -181,9 +181,8 @@ updateSong=(req,res)=>{
 
 }
 deleteSong= async(req,res)=>{
-    console.log(req);
+    console.log(req.body);
     const body=req.body;
-    console.log("at the beginning, the id is "+body.id+" and index is "+body.index );
     Playlist.findOne({_id:body.id},(err,list)=> {
         if(err){
             return res.status(400).json({success:false, err:err})
