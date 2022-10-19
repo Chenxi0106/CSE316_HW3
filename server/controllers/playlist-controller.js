@@ -131,10 +131,15 @@ moveTwoSong = (req,res) => {
         //console.log("my pointed list is "+sourceSong);
         let targetSong=list.songs[body.targetId];
         //console.log("my pointed list is "+targetSong);
+        /*
         list.songs.splice(body.sourceId,1,targetSong);
         //console.log("left now list is "+list.songs);
         list.songs.splice(body.targetId,1,sourceSong);
         //console.log("right now list is "+list.songs);
+        */
+       list.songs.splice(body.sourceId,1);
+       list.songs.splice(body.targetId,0,sourceSong);
+
         list.save()
         .then(() => {
             return res.status(201).json({
