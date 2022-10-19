@@ -11,6 +11,16 @@ import reportWebVitals from './reportWebVitals';
 import { GlobalStoreContext, useGlobalStore } from './store'
 const AppWrapper = () => {
   const store = useGlobalStore();
+  document.onkeydown=(e) => {
+    let canUndo = store.store.undoable();
+    let canRedo = store.store.redoable();
+    if(e.ctrlKey && e.code === "KeyZ"&&canUndo){
+      store.store.undo();
+    }
+    else if(e.ctrlKey && e.code === "KeyY"&&canRedo){
+        store.store.redo();
+    }
+  }
   return (
     <GlobalStoreContext.Provider value={store}>
       <App />
